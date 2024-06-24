@@ -30,7 +30,7 @@ class InterimStabilityController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function retriveInfo(Request $request)
+    public function retriveInfo(Request $request) 
     {
 
         $param = explode('|', $request->fdata);
