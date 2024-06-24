@@ -6,7 +6,7 @@
             {{Html::image('public/site_resource/images/User_Circle.png','',['class'=>'media-object'])}}
             <div class="media-body">
                 <h4><a href="#">&nbsp;{{Auth::user()->name}}</a></h4>
-                <span>&nbsp;&nbsp;<strong>Id: {{Auth::user()->user_id}}</strong></span>
+                <span>&nbsp;&nbsp;<strong>Id: {{Auth::user()->user_id}}</strong></span> 
             </div>
         </div>
 
