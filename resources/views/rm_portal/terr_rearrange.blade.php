@@ -1,0 +1,444 @@
+@extends('_layout_shared._master')
+@section('title','Territory Rearrange')
+@section('styles')
+    <link href="{{ url('public/site_resource/css/dataTables.bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url('public/site_resource/css/fixedHeader.bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url('public/site_resource/css/fixedColumns.bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url('public/site_resource/css/buttons.bootstrap.min.css')}}" rel="stylesheet" type="text/css"/>
+    <link href="{{ url('public/site_resource/dpicker/bootstrap-datetimepicker.css')}}" rel="stylesheet"
+          type="text/css"/>
+    <style>
+        .panel-heading {
+            padding: 5px 15px 2px 15px;
+            margin-bottom: 0px;
+        }
+
+        .form-control {
+            border-radius: 0px;
+        }
+
+        .input-group-addon {
+            border-radius: 0px;
+        }
+
+        .table > thead > tr > th {
+            padding: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .table > tbody > tr > td {
+            padding: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .table > tfoot > tr > td {
+            padding: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        body {
+            color: #000;
+        }
+
+        th, td {
+            white-space: nowrap;
+        }
+
+        div.dataTables_wrapper {
+            /*width: 800px;*/
+            margin: 0 auto;
+        }
+
+    </style>
+
+@endsection
+
+@section('right-content')
+    <div class="se-pre-con"></div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <section class="panel" id="data_table">
+                <header class="panel-heading">
+                    <label class="text-primary">
+                        Territory Rearrange
+                    </label>
+                </header>
+                <div class="panel-body">
+                    <div class="form-horizontal">
+                        <div class="col-md-12 col-sm-12">
+                            <div class="col-md-12">
+                                <form action="" class="form-horizontal" role="form">
+                                    <div class="form-group">
+                                        @if(Auth::user()->desig === 'RM' || Auth::user()->desig === 'ASM')
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="emp_month"
+                                                               class="col-md-6 col-sm-6 control-label"><b>Emp Month:</b></label>
+                                                        <div class="col-md-6">
+                                                            <select name="emp_month" id="emp_month"
+                                                                    class="form-control input-sm">
+                                                                {{--<option value="">Select Month</option>--}}
+                                                                @foreach($cr_month as $mn)
+                                                                    <option value="{{$mn->cr_month}}">{{$mn->cr_month}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 bs-month">
+                                                    <div class="form-group">
+                                                        <label for="emp_month"
+                                                               class="col-md-6 col-sm-6 control-label"><b>Region Terr
+                                                                Id:</b></label>
+                                                        <div class="col-md-6">
+                                                            <select name="rm_terr" id="rm_terr"
+                                                                    class="form-control input-sm" disabled>
+                                                                <option value="{{Auth::user()->terr_id}}">{{Auth::user()->terr_id}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 bs-month">
+                                                    <div class="form-group">
+                                                        <label for="emp_month"
+                                                               class="col-md-6 col-sm-6 control-label"><b>RM/ASM
+                                                                Name:</b></label>
+                                                        <div class="col-md-6">
+                                                            <input type="text" name="smrm_name" class="form-control input-sm"  id="smrm_name" value="{{Auth::user()->name}}" readonly >
+
+                                                            <input type="hidden" name="smrm_id" id="smrm_id"
+                                                                   value="{{Auth::user()->user_id}}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row bs-month">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="emp_month"
+                                                               class="col-md-6 col-sm-6 control-label"><b>Change
+                                                                Employee Type:</b></label>
+                                                        <div class="col-md-6">
+                                                            <select name="cet" id="cet" class="form-control input-sm">
+                                                                <option value="0">Designation Type</option>
+                                                                <option value="div1">MPO</option>
+                                                                <option value="div2">AM</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="div1" class="group" style="display: none;">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="emp_month"
+                                                                   class="col-md-6 col-sm-6 control-label"><b>AM Terr
+                                                                    Id:</b></label>
+                                                            <div class="col-md-6">
+                                                                <select name="am_terr" id="am_terr"
+                                                                        class="form-control input-sm">
+                                                                    <option value="">Select Territory</option>
+                                                                    <option value="All">All</option>
+                                                                    @foreach($am_terr as $terr)
+                                                                        <option value="{{$terr->am_terr_id}}">{{$terr->am_terr_id}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="emp_month"
+                                                                   class="col-md-6 col-sm-6 control-label"><b>MPO Terr
+                                                                    Id:</b></label>
+                                                            <div class="col-md-6">
+                                                                <select name="mpo_terr" id="mpo_terr"
+                                                                        class="form-control input-sm">
+                                                                    <option value="">Select Territory</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div id="div2" class="group" style="display: none">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="emp_month"
+                                                                   class="col-md-6 col-sm-6 control-label"><b>AM Terr
+                                                                    Id:</b></label>
+                                                            <div class="col-md-6">
+                                                                <select name="am_terrpp" id="am_terrpp"
+                                                                        class="form-control input-sm">
+                                                                    <option value="">Select Territory</option>
+                                                                    <option value="All">All</option>
+                                                                    @foreach($am_terr as $terr)
+                                                                        <option value="{{$terr->am_terr_id}}">{{$terr->am_terr_id}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+
+                                        @if(Auth::user()->desig === 'All'||  Auth::user()->desig === 'HO')
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="emp_month"
+                                                               class="col-md-6 col-sm-6 control-label"><b>Emp Month:</b></label>
+                                                        <div class="col-md-6">
+                                                            <select name="emp_month" id="emp_month"
+                                                                    class="form-control input-sm">
+                                                                {{--<option value="">Select Month</option>--}}
+                                                                @foreach($cr_month as $mn)
+                                                                    <option value="{{$mn->cr_month}}">{{$mn->cr_month}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 bs-month">
+                                                    <div class="form-group">
+                                                        <label for="emp_month"
+                                                               class="col-md-6 col-sm-6 control-label"><b>Region Terr
+                                                                Id:</b></label>
+                                                        <div class="col-md-6">
+                                                            <select name="rm_terr" id="rm_terr" class="form-control input-sm" >
+                                                                <option value="">Select Territory</option>
+                                                                @foreach($rm_terr as $terr)
+                                                                    <option value="{{$terr->rm_terr_id}}">{{$terr->rm_terr_id}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            <input type="hidden" name="smrm_id" id="smrm_id" value="">
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 bs-month">
+                                                    <div class="form-group">
+                                                        <label for="emp_month"
+                                                               class="col-md-6 col-sm-6 control-label"><b>RM/ASM
+                                                                Name:</b></label>
+                                                        <div class="col-md-6 col-sm-6">
+                                                            <input type="text" name="smrm_name" class="form-control input-sm"  id="smrm_name" readonly value="" >
+                                                            {{--<select name="smrm_name" id="smrm_name"
+                                                                    class="form-control input-sm" disabled>
+
+                                                            </select>--}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row bs-month">
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label for="emp_month"
+                                                               class="col-md-6 col-sm-6 control-label"><b>Change
+                                                                Employee Type:</b></label>
+                                                        <div class="col-md-6">
+                                                            <select name="cet" id="cet" class="form-control input-sm">
+                                                                <option value="0">Designation Type</option>
+                                                                <option value="div1">MPO</option>
+                                                                <option value="div2">AM</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div id="div1" class="group" style="display: none;">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="emp_month"
+                                                                   class="col-md-6 col-sm-6 control-label"><b>AM Terr
+                                                                    Id:</b></label>
+                                                            <div class="col-md-6">
+                                                                <select name="am_terr" id="am_terr"
+                                                                        class="form-control input-sm">
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="emp_month"
+                                                                   class="col-md-6 col-sm-6 control-label"><b>MPO Terr
+                                                                    Id:</b></label>
+                                                            <div class="col-md-6">
+                                                                <select name="mpo_terr" id="mpo_terr"
+                                                                        class="form-control input-sm">
+                                                                    <option value="">Select Territory</option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div id="div2" class="group" style="display: none">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="emp_month"
+                                                                   class="col-md-6 col-sm-6 control-label"><b>AM Terr
+                                                                    Id:</b></label>
+                                                            <div class="col-md-6">
+                                                                <select name="am_terrpp" id="am_terrpp"
+                                                                        class="form-control input-sm">
+                                                                    <option value="">Select Territory</option>
+                                                                    <option value="All">All</option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        @endif
+
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-sm-offset-2 col-md-2 col-sm-2 col-xs-6">
+                            <button type="button" id="btn_display" class="btn btn-default btn-sm">
+                                <i class="fa fa-check"></i> <b>Display Report</b></button>
+                        </div>
+                        <div class="col-md-offset-6 col-sm-offset-6 col-md-2 col-sm-2 col-xs-6">
+                            <div id="export_buttons">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="col-md-12 col-sm-12" id="loader" style="display: none; margin-top: 5px;">
+        <div class="col-md-4 col-sm-4 col-md-offset-4 text-center">
+            <div class="panel">
+                <img src="{{url('public/site_resource/images/preloader.gif')}}"
+                     alt="Loading Report Please wait..." width="35px" height="35px"><br>
+                <span><b><i>Please wait...</i></b></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row bs-month" id="report-body" style="display: none;">
+        <div class="">
+            <div class="col-sm-12 col-md-12">
+                <section class="panel" id="data_table">
+                    <div class="panel-body table-responsive">
+                        <table id="ms_data" class="table table-condensed table-striped table-bordered"
+                               width="100%">
+                            <thead style="white-space:nowrap;">
+                            <tr>
+                                <th>Action</th>
+                                <th>Terr Id</th>
+                                <th>Present Emp Id</th>
+                                <th>Present Emp Name</th>
+                                <th>Present Designation</th>
+                                <th>Target Share</th>
+
+                            </tr>
+                            </thead>
+                            <tbody style="white-space:nowrap;overflow:hidden;"></tbody>
+                            <tfoot>
+                            <tr>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <form action="" class="form-horizontal" role="form">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Employee information</h4>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div id="modal-body-terrChange">
+
+
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-warning" id="fn-submit" value="Submit">
+                        <input type="button" class="btn btn-default" id="fn-close" data-dismiss="modal" value="Close">
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    @endsection
+    @section('footer-content')
+    {{date('Y')}} &copy; Incepta Pharmaceuticals Ltd.
+@endsection
+@section('scripts')
+
+    {{Html::script('public/site_resource/js/jquery.dataTables.min.js')}}
+    {{Html::script('public/site_resource/js/dataTables.bootstrap.min.js')}}
+    {{Html::script('public/site_resource/js/dataTables.fixedHeader.min.js')}}
+    {{Html::script('public/site_resource/js/dataTables.fixedColumns.min.js')}}
+
+
+    {{Html::script('public/site_resource/js/dataTables.buttons.min.js')}}
+    {{Html::script('public/site_resource/js/buttons.bootstrap.min.js')}}
+    {{Html::script('public/site_resource/js/buttons.flash.min.js')}}
+
+    {{Html::script('public/site_resource/js/jszip.min.js')}}
+    {{Html::script('public/site_resource/js/pdfmake.min.js')}}
+    {{Html::script('public/site_resource/js/vfs_fonts.js')}}
+
+    {{Html::script('public/site_resource/js/buttons.html5.min.js')}}
+    {{Html::script('public/site_resource/dpicker/moment-with-locales.js')}}
+    {{Html::script('public/site_resource/dpicker/bootstrap-datetimepicker.js')}}
+
+    {{Html::script('public/site_resource/js/rm_portal_scripts/terr_rearrange_script.js')}}
+
+
+    <script type="text/javascript">
+        servloc_month_rm = "{{url('rm_portal/regWTerrRMList')}}";
+        servloc_tid = "{{url('rm_portal/regwMpoTerrListTr')}}";
+        // servloc_rm = "{{url('rm_portal/regWTerrAmList')}}";
+        servloc_rm = "{{url('rm_portal/regWiseTerrAMListNew')}}";
+        servloc_am = "{{url('rm_portal/amWiseData')}}";
+        servloc_mpo = "{{url('rm_portal/mpoWiseData')}}";
+        change_terr_his = "{{url('rm_portal/changeTerrHistory')}}";
+
+        eid = "{{Auth::user()->user_id}}";
+        desig = "{{Auth::user()->desig}}";
+
+    </script>
+
+
+
+@endsection
